@@ -18,3 +18,7 @@ func (ft *TimeRFC3339) UnmarshalJSON(bs []byte) error {
 		return nil
 	}
 }
+
+func (ft *TimeRFC3339) String() string {
+	return time.Time(*ft).String()
+}
