@@ -19,6 +19,6 @@ func (ft *TimeRFC3339) UnmarshalJSON(bs []byte) error {
 	}
 }
 
-func (ft *TimeRFC3339) String() string {
-	return time.Time(*ft).String()
+func (ft TimeRFC3339) String() string {
+	return time.Time(ft).String()
 }
