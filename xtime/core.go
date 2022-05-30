@@ -1,17 +1,13 @@
 package xtime
 
 import (
-	"encoding/json"
 	"time"
 )
 
 type TimeRFC3339 time.Time
 
-func (ft *TimeRFC3339) UnmarshalJSON(bs []byte) error {
-	var s string
-	if err := json.Unmarshal(bs, &s); err != nil {
-		return err
-	} else if t, err := time.ParseInLocation(time.RFC3339, s, time.UTC); err != nil {
+func (ft *TimeRFC3339) UnmarshalJSON(data []byte) error {
+	if t, err := time.ParseInLocation(time.RFC3339, string(data), time.UTC); err != nil {
 		return err
 	} else {
 		*ft = TimeRFC3339(t)
@@ -19,6 +15,6 @@ func (ft *TimeRFC3339) UnmarshalJSON(bs []byte) error {
 	}
 }
 
-func (ft TimeRFC3339) String() string {
-	return time.Time(ft).String()
+func (ft TimeRFC3339) MarshalJSON() ([]byte, error) {
+	return []byte(time.Time(ft).UTC().Truncate(time.Second).Format(time.RFC3339)), nil
 }
