@@ -9,7 +9,7 @@ type TimeRFC3339 time.Time
 
 func (ft *TimeRFC3339) UnmarshalJSON(data []byte) error {
 	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	if err := json.Unmarshal(data[:], &s); err != nil {
 		return err
 	} else if t, err := time.ParseInLocation(time.RFC3339, s, time.UTC); err != nil {
 		return err
