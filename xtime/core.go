@@ -20,5 +20,6 @@ func (ft *TimeRFC3339) UnmarshalJSON(data []byte) error {
 }
 
 func (ft TimeRFC3339) MarshalJSON() ([]byte, error) {
-	return []byte(time.Time(ft).UTC().Truncate(time.Second).Format(time.RFC3339)), nil
+	s := time.Time(ft).UTC().Truncate(time.Second).Format(time.RFC3339)
+	return []byte(s), nil
 }
