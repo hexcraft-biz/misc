@@ -21,8 +21,7 @@ func (xuuid *UUID) UnmarshalJSON(data []byte) error {
 }
 
 func (xuuid UUID) MarshalJSON() ([]byte, error) {
-	s := xuuid.String()
-	return []byte(s), nil
+	return xuuid.MarshalBinary()
 }
 
 func (xuuid *UUID) Scan(src interface{}) error {
