@@ -20,10 +20,6 @@ func (xuuid *UUID) UnmarshalJSON(data []byte) error {
 	}
 }
 
-func (xuuid UUID) MarshalJSON() ([]byte, error) {
-	return xuuid.MarshalBinary()
-}
-
 func (xuuid *UUID) Scan(src interface{}) error {
 	return (*uuid.UUID)(xuuid).Scan(src)
 }
