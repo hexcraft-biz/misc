@@ -31,3 +31,23 @@ func (xuuid *UUID) Scan(src interface{}) error {
 func (xuuid UUID) Value() (driver.Value, error) {
 	return uuid.UUID(xuuid).Value()
 }
+
+func (xuuid UUID) MarshalBinary() ([]byte, error) {
+	return uuid.UUID(xuuid).MarshalBinary()
+}
+
+func (xuuid *UUID) UnmarshalBinary(data []byte) error {
+	return (*uuid.UUID)(xuuid).UnmarshalBinary(data)
+}
+
+func (xuuid *UUID) UnmarshalText(data []byte) error {
+	return (*uuid.UUID)(xuuid).UnmarshalText(data)
+}
+
+func (xuuid UUID) MarshalText() ([]byte, error) {
+	return uuid.UUID(xuuid).MarshalText()
+}
+
+func (xuuid UUID) String() string {
+	return uuid.UUID(xuuid).String()
+}
