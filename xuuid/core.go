@@ -25,11 +25,9 @@ func (xuuid UUID) MarshalJSON() ([]byte, error) {
 }
 
 func (xuuid *UUID) Scan(src interface{}) error {
-	u := (*uuid.UUID)(xuuid)
-	return u.Scan(src)
+	return (*uuid.UUID)(xuuid).Scan(src)
 }
 
 func (xuuid UUID) Value() (driver.Value, error) {
-	u := uuid.UUID(xuuid)
-	return u.Value()
+	return uuid.UUID(xuuid).Value()
 }
