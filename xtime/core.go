@@ -55,6 +55,8 @@ func (ntf NullTimeRFC3339) MarshalJSON() ([]byte, error) {
 	if nt.Valid {
 		return []byte(fmt.Sprintf("\"%s\"", nt.Time.UTC().Truncate(time.Second).Format(time.RFC3339))), nil
 	} else {
+		fmt.Println(nt)
+		fmt.Println(ntf)
 		return []byte("\"\""), nil
 	}
 }
