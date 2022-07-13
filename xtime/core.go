@@ -52,8 +52,10 @@ func (ntf *NullTimeRFC3339) UnmarshalJSON(data []byte) error {
 func (ntf NullTimeRFC3339) MarshalJSON() ([]byte, error) {
 	nt := sql.NullTime(ntf)
 	if nt.Valid {
+		fmt.Println("--------", "valid", "---------")
 		return []byte(fmt.Sprintf("\"%s\"", nt.Time.UTC().Truncate(time.Second).Format(time.RFC3339))), nil
 	} else {
+		fmt.Println("--------", "invalid", "---------")
 		return []byte(""), nil
 	}
 }
