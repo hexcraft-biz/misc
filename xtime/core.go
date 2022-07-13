@@ -39,8 +39,6 @@ func (ntf *NullTimeRFC3339) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data[:], &s); err != nil {
 		return err
 	} else if s == "" {
-		//*ntf = NullTimeRFC3339(sql.NullTime{Valid: false})
-		ntf = nil
 		return nil
 	} else if t, err := time.ParseInLocation(time.RFC3339, s, time.UTC); err != nil {
 		return err
@@ -51,11 +49,10 @@ func (ntf *NullTimeRFC3339) UnmarshalJSON(data []byte) error {
 }
 
 func (ntf NullTimeRFC3339) MarshalJSON() ([]byte, error) {
-	//nt := sql.NullTime(ntf)
 	if ntf.Valid {
 		return []byte(fmt.Sprintf("\"%s\"", ntf.Time.UTC().Truncate(time.Second).Format(time.RFC3339))), nil
 	} else {
-		return nil, nil
+		return []byte("\"\""), nil
 	}
 }
 
