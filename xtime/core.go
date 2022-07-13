@@ -38,6 +38,9 @@ func (ntf *NullTimeRFC3339) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data[:], &s); err != nil {
 		return err
+	} else if s == "" {
+		*ntf = NullTimeRFC3339(sql.NullTime{Valid: false})
+		return nil
 	} else if t, err := time.ParseInLocation(time.RFC3339, s, time.UTC); err != nil {
 		return err
 	} else {
