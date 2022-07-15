@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 )
 
@@ -62,4 +63,16 @@ func (ntf NullTimeRFC3339) Value() (driver.Value, error) {
 
 func (ntf *NullTimeRFC3339) Scan(value interface{}) error {
 	return (*sql.NullTime)(ntf).Scan(value)
+}
+
+func (ntf NullTimeRFC3339) ValidateTypeHook(field reflect.Value) interface{} {
+	if field.Type() == reflect.TypeOf(NullTimeRFC3339{}) {
+		nilRef := time.Time{}
+		if field.Interface().(NullTimeRFC3339).Time == nilRef {
+			return nil
+		}
+		return field.Interface().(NullTimeRFC3339)
+	}
+
+	return nil
 }
