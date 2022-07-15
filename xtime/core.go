@@ -65,7 +65,7 @@ func (ntf *NullTimeRFC3339) Scan(value interface{}) error {
 	return (*sql.NullTime)(ntf).Scan(value)
 }
 
-func (ntf NullTimeRFC3339) ValidateTypeHook(field reflect.Value) interface{} {
+func ValidateTypeHook(field reflect.Value) interface{} {
 	if field.Type() == reflect.TypeOf(NullTimeRFC3339{}) {
 		nilRef := time.Time{}
 		if field.Interface().(NullTimeRFC3339).Time == nilRef {
