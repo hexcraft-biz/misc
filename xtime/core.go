@@ -70,8 +70,11 @@ func ValidateTypeHook(field reflect.Value) interface{} {
 		nilRef := time.Time{}
 		if field.Interface().(NullTimeRFC3339).Time == nilRef {
 			return nil
+		} else if val, err := field.Interface().(NullTimeRFC3339).Value(); err != nil {
+			return nil
+		} else {
+			return val
 		}
-		return field.Interface().(NullTimeRFC3339).Value()
 	}
 
 	return nil
