@@ -30,6 +30,10 @@ func (ft TimeRFC3339) MarshalJSON() ([]byte, error) {
 	return []byte(fmt.Sprintf("\"%s\"", time.Time(ft).UTC().Truncate(time.Second).Format(time.RFC3339))), nil
 }
 
+func (ft TimeRFC3339) Value() (driver.Value, error) {
+	return time.Time(ft).Format(time.RFC3339), nil
+}
+
 //================================================================
 //
 //================================================================
