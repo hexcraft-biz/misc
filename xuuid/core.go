@@ -12,6 +12,8 @@ func (xuuid *UUID) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data[:], &s); err != nil {
 		return err
+	} else if s == "" {
+		return nil
 	} else if u, err := uuid.Parse(s); err != nil {
 		return err
 	} else {
