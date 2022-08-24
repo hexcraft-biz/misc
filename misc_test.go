@@ -50,10 +50,8 @@ func TestXuuid(t *testing.T) {
 	jsonStr := []byte(`{
 		"case1": "",
 		"case2": null,
-		"case3": "49a3927a-49ff-4591-913d-92b94551f0b",
 		"case5": "",
-		"case6": null,
-		"case7": "49a3927a-49ff-4591-913d-92b94551f0b"
+		"case6": null
 	}`)
 	if err := json.Unmarshal(jsonStr, &xt); err != nil {
 		fmt.Println(err.Error())
