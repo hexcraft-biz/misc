@@ -86,8 +86,8 @@ func ValidateTypeNullTimeRFC3339(field reflect.Value) interface{} {
 
 func ValidateTypeTimeRFC3339(field reflect.Value) interface{} {
 	if field.Type() == reflect.TypeOf(TimeRFC3339{}) {
-		nilRef := time.Time{}
-		if field.Interface().(time.Time) == nilRef {
+		nilRef := TimeRFC3339{}
+		if field.Interface().(TimeRFC3339) == nilRef {
 			return nil
 		} else if val, err := field.Interface().(TimeRFC3339).Value(); err != nil {
 			return nil
