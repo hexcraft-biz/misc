@@ -10,16 +10,14 @@ import (
 
 func TestXtime(t *testing.T) {
 	type TimeTesting struct {
-		Case1 xtime.NullTimeRFC3339 `json:"case1"`
-		Case2 xtime.NullTimeRFC3339 `json:"case2"`
-		Case3 xtime.NullTimeRFC3339 `json:"case3"`
+		Case1 *xtime.TimeRFC3339 `json:"case1"`
+		Case2 *xtime.TimeRFC3339 `json:"case2"`
 	}
 
 	var tt TimeTesting
 	jsonStr := []byte(`{
 		"case1": "2022-06-16T04:00:00Z",
-		"case2": "",
-		"case3": null
+		"case2": null
 	}`)
 
 	if err := json.Unmarshal(jsonStr, &tt); err != nil {
@@ -29,7 +27,6 @@ func TestXtime(t *testing.T) {
 	} else {
 		fmt.Println(tt.Case1)
 		fmt.Println(tt.Case2)
-		fmt.Println(tt.Case3)
 		fmt.Println(string(js))
 	}
 }

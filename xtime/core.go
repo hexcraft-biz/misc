@@ -31,7 +31,7 @@ func (ft TimeRFC3339) MarshalJSON() ([]byte, error) {
 }
 
 func (ft TimeRFC3339) Value() (driver.Value, error) {
-	return time.Time(ft).Format("2006-01-02 15:04:05"), nil
+	return time.Time(ft).Format("2006-01-02T15:04:05Z"), nil
 }
 
 //================================================================
@@ -69,12 +69,27 @@ func (ntf *NullTimeRFC3339) Scan(value interface{}) error {
 	return (*sql.NullTime)(ntf).Scan(value)
 }
 
-func ValidateTypeHook(field reflect.Value) interface{} {
+func ValidateTypeNullTimeRFC3339(field reflect.Value) interface{} {
 	if field.Type() == reflect.TypeOf(NullTimeRFC3339{}) {
 		nilRef := time.Time{}
 		if field.Interface().(NullTimeRFC3339).Time == nilRef {
 			return nil
 		} else if val, err := field.Interface().(NullTimeRFC3339).Value(); err != nil {
+			return nil
+		} else {
+			return val
+		}
+	}
+
+	return nil
+}
+
+func ValidateTypeTimeRFC3339(field reflect.Value) interface{} {
+	if field.Type() == reflect.TypeOf(TimeRFC3339{}) {
+		nilRef := time.Time{}
+		if field.Interface().(time.Time) == nilRef {
+			return nil
+		} else if val, err := field.Interface().(TimeRFC3339).Value(); err != nil {
 			return nil
 		} else {
 			return val
