@@ -31,7 +31,7 @@ func (ft TimeRFC3339) MarshalJSON() ([]byte, error) {
 }
 
 func (ft TimeRFC3339) Value() (driver.Value, error) {
-	return time.Time(ft).Format("2006-01-02T15:04:05Z"), nil
+	return time.Time(ft).Format(time.RFC3339), nil
 }
 
 //================================================================
