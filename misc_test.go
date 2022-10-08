@@ -10,14 +10,26 @@ import (
 
 func TestXtime(t *testing.T) {
 	type TimeTesting struct {
-		Case1 *xtime.TimeRFC3339 `json:"case1"`
-		Case2 *xtime.TimeRFC3339 `json:"case2"`
+		Case1 *xtime.TimeStartedRFC3339 `json:"case1"`
+		Case2 *xtime.TimeStartedRFC3339 `json:"case2"`
+		Case3 *xtime.TimeExpiredRFC3339 `json:"case3"`
+		Case4 *xtime.TimeExpiredRFC3339 `json:"case4"`
+		Case5 xtime.TimeStartedRFC3339  `json:"case5"`
+		Case6 xtime.TimeStartedRFC3339  `json:"case6"`
+		Case7 xtime.TimeExpiredRFC3339  `json:"case7"`
+		Case8 xtime.TimeExpiredRFC3339  `json:"case8"`
 	}
 
 	var tt TimeTesting
 	jsonStr := []byte(`{
-		"case1": "2022-06-16T04:00:00Z",
-		"case2": null
+		"case1": "",
+		"case2": null,
+		"case3": "",
+		"case4": null,
+		"case5": "",
+		"case6": null,
+		"case7": "",
+		"case8": null
 	}`)
 
 	if err := json.Unmarshal(jsonStr, &tt); err != nil {
@@ -27,6 +39,12 @@ func TestXtime(t *testing.T) {
 	} else {
 		fmt.Println(tt.Case1)
 		fmt.Println(tt.Case2)
+		fmt.Println(tt.Case3)
+		fmt.Println(tt.Case4)
+		fmt.Println(tt.Case5)
+		fmt.Println(tt.Case6)
+		fmt.Println(tt.Case7)
+		fmt.Println(tt.Case8)
 		fmt.Println(string(js))
 	}
 }

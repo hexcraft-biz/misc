@@ -10,7 +10,7 @@ import (
 )
 
 //================================================================
-//
+// TimeRFC3339
 //================================================================
 type TimeRFC3339 time.Time
 
@@ -31,6 +31,64 @@ func (ft TimeRFC3339) MarshalJSON() ([]byte, error) {
 }
 
 func (ft TimeRFC3339) Value() (driver.Value, error) {
+	return time.Time(ft).Format("2006-01-02 15:04:05"), nil
+}
+
+//================================================================
+// TimeStartedRFC3339
+//================================================================
+type TimeStartedRFC3339 time.Time
+
+func (ft *TimeStartedRFC3339) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data[:], &s); err != nil {
+		return err
+	} else if s == "" {
+		s = "1000-01-01T00:00:00Z"
+	}
+
+	if t, err := time.ParseInLocation(time.RFC3339, s, time.UTC); err != nil {
+		return err
+	} else {
+		*ft = TimeStartedRFC3339(t)
+		return nil
+	}
+}
+
+func (ft TimeStartedRFC3339) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("\"%s\"", time.Time(ft).UTC().Truncate(time.Second).Format(time.RFC3339))), nil
+}
+
+func (ft TimeStartedRFC3339) Value() (driver.Value, error) {
+	return time.Time(ft).Format("2006-01-02 15:04:05"), nil
+}
+
+//================================================================
+// TimeExpiredRFC3339
+//================================================================
+type TimeExpiredRFC3339 time.Time
+
+func (ft *TimeExpiredRFC3339) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data[:], &s); err != nil {
+		return err
+	} else if s == "" {
+		s = "9999-12-31T23:59:59Z"
+	}
+
+	if t, err := time.ParseInLocation(time.RFC3339, s, time.UTC); err != nil {
+		return err
+	} else {
+		*ft = TimeExpiredRFC3339(t)
+		return nil
+	}
+}
+
+func (ft TimeExpiredRFC3339) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("\"%s\"", time.Time(ft).UTC().Truncate(time.Second).Format(time.RFC3339))), nil
+}
+
+func (ft TimeExpiredRFC3339) Value() (driver.Value, error) {
 	return time.Time(ft).Format("2006-01-02 15:04:05"), nil
 }
 
