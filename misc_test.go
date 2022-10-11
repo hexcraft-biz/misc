@@ -79,3 +79,30 @@ func TestXuuid(t *testing.T) {
 		fmt.Println(string(js))
 	}
 }
+
+func TestWildcard(t *testing.T) {
+	type WildcardTest struct {
+		Case1 xuuid.Wildcard `json:"case1"`
+		Case2 xuuid.Wildcard `json:"case2"`
+		Case3 xuuid.Wildcard `json:"case3"`
+	}
+
+	var wt WildcardTest
+
+	jsonStr := []byte(`{
+		"case1": "e7a5f446-ef76-4651-80a8-a6628e874d72",
+		"case2": null,
+		"case3": "boss@hexcraft.biz"
+	}`)
+
+	if err := json.Unmarshal(jsonStr, &wt); err != nil {
+		t.Fatal(err.Error())
+	} else if js, err := json.Marshal(wt); err != nil {
+		t.Fatal(err.Error())
+	} else {
+		fmt.Println(wt.Case1.Value())
+		fmt.Println(wt.Case2.Value())
+		fmt.Println(wt.Case3.Value())
+		fmt.Println(string(js))
+	}
+}
