@@ -51,31 +51,29 @@ func TestXtime(t *testing.T) {
 
 func TestXuuid(t *testing.T) {
 	type XuuidTesting struct {
-		Case1 xuuid.UUID  `json:"case1"`
-		Case2 xuuid.UUID  `json:"case2"`
-		Case3 xuuid.UUID  `json:"case3"`
-		Case4 xuuid.UUID  `json:"case4"`
-		Case5 *xuuid.UUID `json:"case5"`
-		Case6 *xuuid.UUID `json:"case6"`
-		Case7 *xuuid.UUID `json:"case7"`
-		Case8 *xuuid.UUID `json:"case8"`
+		Case1 xuuid.Wildcard `json:"case1"`
+		Case2 xuuid.Wildcard `json:"case2"`
+		Case3 xuuid.Wildcard `json:"case3"`
+		Case4 xuuid.Wildcard `json:"case4"`
 	}
 
 	var xt XuuidTesting
 	jsonStr := []byte(`{
-		"case1": "",
-		"case2": null,
-		"case5": "",
-		"case6": null
+		"case1": "c973e6dc-c2ea-46ef-b1af-65653d8df62a",
+		"case2": "test",
+		"case3": "",
+		"case4": null
+
 	}`)
 	if err := json.Unmarshal(jsonStr, &xt); err != nil {
 		fmt.Println(err.Error())
 	} else if js, err := json.Marshal(xt); err != nil {
 		t.Fatal(err.Error())
 	} else {
-		fmt.Println(xt.Case1)
-		fmt.Println(xt.Case2)
-		fmt.Println(xt.Case3)
+		fmt.Println(xt.Case1.Value())
+		fmt.Println(xt.Case2.Value())
+		fmt.Println(xt.Case3.Value())
+		fmt.Println(xt.Case4.Value())
 		fmt.Println(string(js))
 	}
 }
