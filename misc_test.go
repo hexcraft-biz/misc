@@ -8,43 +8,27 @@ import (
 	"testing"
 )
 
-func TestXtime(t *testing.T) {
-	type TimeTesting struct {
-		Case1 *xtime.TimeStartedRFC3339 `json:"case1"`
-		Case2 *xtime.TimeStartedRFC3339 `json:"case2"`
-		Case3 *xtime.TimeExpiredRFC3339 `json:"case3"`
-		Case4 *xtime.TimeExpiredRFC3339 `json:"case4"`
-		Case5 xtime.TimeStartedRFC3339  `json:"case5"`
-		Case6 xtime.TimeStartedRFC3339  `json:"case6"`
-		Case7 xtime.TimeExpiredRFC3339  `json:"case7"`
-		Case8 xtime.TimeExpiredRFC3339  `json:"case8"`
+func TestMysqlTime(t *testing.T) {
+	type TimeTest struct {
+		Case1 xtime.Time `json:"time_missing"`
+		Case2 xtime.Time `json:"time_null"`
+		Case3 xtime.Time `json:"time_common"`
 	}
 
-	var tt TimeTesting
+	var tt TimeTest
 	jsonStr := []byte(`{
-		"case1": "",
-		"case2": null,
-		"case3": "",
-		"case4": null,
-		"case5": "",
-		"case6": null,
-		"case7": "",
-		"case8": null
+		"time_null": null,
+		"time_common": "2023-12-01T00:00:00Z"
 	}`)
 
 	if err := json.Unmarshal(jsonStr, &tt); err != nil {
 		fmt.Println(err.Error())
-	} else if js, err := json.Marshal(tt); err != nil {
+	} else if js, err := json.MarshalIndent(tt, "", "\t"); err != nil {
 		t.Fatal(err.Error())
 	} else {
-		fmt.Println(tt.Case1)
-		fmt.Println(tt.Case2)
-		fmt.Println(tt.Case3)
-		fmt.Println(tt.Case4)
-		fmt.Println(tt.Case5)
-		fmt.Println(tt.Case6)
-		fmt.Println(tt.Case7)
-		fmt.Println(tt.Case8)
+		fmt.Println(tt.Case1.Value())
+		fmt.Println(tt.Case2.Value())
+		fmt.Println(tt.Case3.Value())
 		fmt.Println(string(js))
 	}
 }
