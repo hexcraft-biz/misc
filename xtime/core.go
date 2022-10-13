@@ -13,6 +13,11 @@ type Time struct {
 	time.Time
 }
 
+func NowUTC() Time {
+	t := time.Now().UTC()
+	return Time{Time: t}
+}
+
 func (t Time) MarshalJSON() ([]byte, error) {
 	if y := t.Year(); y < 0 || y >= 10000 {
 		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
