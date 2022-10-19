@@ -6,6 +6,7 @@ import (
 	"github.com/hexcraft-biz/misc/xtime"
 	"github.com/hexcraft-biz/misc/xuuid"
 	"testing"
+	"time"
 )
 
 func TestMysqlTime(t *testing.T) {
@@ -30,6 +31,7 @@ func TestMysqlTime(t *testing.T) {
 		fmt.Println(tt.Case2.Value())
 		fmt.Println(tt.Case3.Value())
 		fmt.Println(string(js))
+		fmt.Println(tt.Case3.Add(time.Second * 86400))
 	}
 }
 

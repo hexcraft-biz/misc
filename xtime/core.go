@@ -18,6 +18,10 @@ func NowUTC() Time {
 	return Time{Time: t}
 }
 
+func (t Time) Add(d time.Duration) Time {
+	return Time{Time: t.Time.Add(d)}
+}
+
 func (t Time) MarshalJSON() ([]byte, error) {
 	if y := t.Year(); y < 0 || y >= 10000 {
 		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
