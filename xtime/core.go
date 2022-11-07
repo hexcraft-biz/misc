@@ -18,6 +18,18 @@ func NowUTC() Time {
 	return Time{Time: t}
 }
 
+func MysqlMin() Time {
+	return Time{
+		Time: time.Date(1000, time.January, 1, 0, 0, 0, 0, time.UTC),
+	}
+}
+
+func MysqlMax() Time {
+	return Time{
+		Time: time.Date(9999, time.December, 31, 23, 59, 59, 999999999, time.UTC),
+	}
+}
+
 func (t Time) Add(d time.Duration) Time {
 	return Time{Time: t.Time.Add(d)}
 }
