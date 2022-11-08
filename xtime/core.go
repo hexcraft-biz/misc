@@ -30,6 +30,14 @@ func MysqlMax() Time {
 	}
 }
 
+func (t Time) Before(u Time) bool {
+	return t.Time.Before(u.Time)
+}
+
+func (t Time) After(u Time) bool {
+	return t.Time.After(u.Time)
+}
+
 func (t Time) Add(d time.Duration) Time {
 	return Time{Time: t.Time.Add(d)}
 }
