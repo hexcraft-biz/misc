@@ -34,8 +34,8 @@ func (xuuid *UUID) Scan(src interface{}) error {
 	return (*uuid.UUID)(xuuid).Scan(src)
 }
 
-func (xuuid UUID) Value() ([]byte, error) {
-	return uuid.UUID(xuuid).MarshalBinary()
+func (xuuid UUID) Value() (driver.Value, error) {
+	return xuuid.MarshalBinary()
 }
 
 func (xuuid UUID) MarshalBinary() ([]byte, error) {
