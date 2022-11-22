@@ -41,6 +41,7 @@ func TestXuuid(t *testing.T) {
 		Case2 xuuid.Wildcard `json:"case2"`
 		Case3 xuuid.Wildcard `json:"case3"`
 		Case4 xuuid.Wildcard `json:"case4"`
+		Case5 xuuid.UUID     `json:"case5"`
 	}
 
 	var xt XuuidTesting
@@ -48,8 +49,8 @@ func TestXuuid(t *testing.T) {
 		"case1": "c973e6dc-c2ea-46ef-b1af-65653d8df62a",
 		"case2": "test",
 		"case3": "",
-		"case4": null
-
+		"case4": null,
+		"case5": "c973e6dc-c2ea-46ef-b1af-65653d8df62a"
 	}`)
 	if err := json.Unmarshal(jsonStr, &xt); err != nil {
 		fmt.Println(err.Error())
@@ -60,6 +61,7 @@ func TestXuuid(t *testing.T) {
 		fmt.Println(xt.Case2.Value())
 		fmt.Println(xt.Case3.Value())
 		fmt.Println(xt.Case4.Value())
+		fmt.Println(xt.Case5.Value())
 		fmt.Println(string(js))
 	}
 }
