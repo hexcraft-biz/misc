@@ -15,6 +15,10 @@ func New() UUID {
 	return UUID(uuid.New())
 }
 
+func (xu UUID) IsZero() bool {
+	return (uuid.UUID)(xu) == uuid.Nil
+}
+
 func (xu *UUID) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data[:], &s); err != nil {
