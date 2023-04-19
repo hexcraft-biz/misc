@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hexcraft-biz/misc/xtime"
-	"github.com/hexcraft-biz/misc/xuuid"
 	"testing"
 	"time"
+
+	"github.com/hexcraft-biz/misc/xtime"
+	"github.com/hexcraft-biz/misc/xuuid"
 )
 
 func TestMysqlTime(t *testing.T) {
@@ -63,5 +64,16 @@ func TestXuuid(t *testing.T) {
 		fmt.Println(xt.Case4.Value())
 		fmt.Println(xt.Case5.Value())
 		fmt.Println(string(js))
+	}
+}
+
+func TestParseXuuidString(t *testing.T) {
+	s := "7d444840-9dc0-11d1-b245-5ffdce74fad2"
+
+	uuid, err := xuuid.Parse(s)
+	fmt.Println(uuid, err)
+
+	if err != nil {
+		t.Fatal(err.Error())
 	}
 }

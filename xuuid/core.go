@@ -3,6 +3,7 @@ package xuuid
 import (
 	"database/sql/driver"
 	"encoding/json"
+
 	"github.com/google/uuid"
 )
 
@@ -13,6 +14,12 @@ type UUID uuid.UUID
 
 func New() UUID {
 	return UUID(uuid.New())
+}
+
+func Parse(s string) (UUID, error) {
+	u, error := uuid.Parse(s)
+
+	return UUID(u), error
 }
 
 func (xu UUID) IsZero() bool {
