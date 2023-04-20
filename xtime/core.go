@@ -2,6 +2,7 @@ package xtime
 
 import (
 	"database/sql/driver"
+	"errors"
 	"time"
 )
 
@@ -35,26 +36,15 @@ func (t Time) Add(d time.Duration) Time {
 }
 
 func (t Time) MarshalJSON() ([]byte, error) {
+	if y := time.Time(t).Year(); y < 0 || y >= 10000 {
+		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
+	}
 
-	/*
-		tt := time.Time(t)
-		stamp := []byte(fmt.Sprintf("%q", tt.Format(time.RFC3339)))
-		return stamp, nil
-	*/
-
-	return time.Time(t).MarshalJSON()
-
-	/*
-		if y := time.Time(t).Year(); y < 0 || y >= 10000 {
-			return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
-		}
-
-		b := make([]byte, 0, len(time.RFC3339)+2)
-		b = append(b, '"')
-		b = time.Time(t).AppendFormat(b, time.RFC3339)
-		b = append(b, '"')
-		return b, nil
-	*/
+	b := make([]byte, 0, len(time.RFC3339)+2)
+	b = append(b, '"')
+	b = time.Time(t).AppendFormat(b, time.RFC3339)
+	b = append(b, '"')
+	return b, nil
 }
 
 func (t *Time) UnmarshalJSON(data []byte) error {
