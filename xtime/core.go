@@ -2,7 +2,6 @@ package xtime
 
 import (
 	"database/sql/driver"
-	"fmt"
 	"time"
 )
 
@@ -37,9 +36,13 @@ func (t Time) Add(d time.Duration) Time {
 
 func (t Time) MarshalJSON() ([]byte, error) {
 
-	tt := time.Time(t)
-	stamp := []byte(fmt.Sprintf("%q", tt.Format(time.RFC3339)))
-	return stamp, nil
+	/*
+		tt := time.Time(t)
+		stamp := []byte(fmt.Sprintf("%q", tt.Format(time.RFC3339)))
+		return stamp, nil
+	*/
+
+	return time.Time(t).MarshalJSON()
 
 	/*
 		if y := time.Time(t).Year(); y < 0 || y >= 10000 {
