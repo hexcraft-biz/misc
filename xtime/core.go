@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-//================================================================
+// ================================================================
 // Time
-//================================================================
+// ================================================================
 type Time time.Time
 
 func NowUTC() Time {
@@ -49,6 +49,14 @@ func (t Time) MarshalJSON() ([]byte, error) {
 
 func (t *Time) UnmarshalJSON(data []byte) error {
 	return (*time.Time)(t).UnmarshalJSON(data)
+}
+
+func (t Time) MarshalText() ([]byte, error) {
+	return (time.Time)(t).MarshalText()
+}
+
+func (t *Time) UnmarshalText(data []byte) error {
+	return (*time.Time)(t).UnmarshalText(data)
 }
 
 func (t Time) Value() (driver.Value, error) {
