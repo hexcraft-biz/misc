@@ -40,23 +40,19 @@ func (t Time) MarshalJSON() ([]byte, error) {
 		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
 	}
 
-	b := make([]byte, 0, len(time.RFC3339)+2)
-	b = append(b, '"')
-	b = time.Time(t).AppendFormat(b, time.RFC3339)
-	b = append(b, '"')
-	return b, nil
+	return (time.Time)(t).MarshalJSON()
+
+	/*
+		b := make([]byte, 0, len(time.RFC3339)+2)
+		b = append(b, '"')
+		b = time.Time(t).AppendFormat(b, time.RFC3339)
+		b = append(b, '"')
+		return b, nil
+	*/
 }
 
 func (t *Time) UnmarshalJSON(data []byte) error {
 	return (*time.Time)(t).UnmarshalJSON(data)
-}
-
-func (t Time) MarshalText() ([]byte, error) {
-	return (time.Time)(t).MarshalText()
-}
-
-func (t *Time) UnmarshalText(data []byte) error {
-	return (*time.Time)(t).UnmarshalText(data)
 }
 
 func (t Time) Value() (driver.Value, error) {
