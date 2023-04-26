@@ -37,7 +37,7 @@ func (t Time) Add(d time.Duration) Time {
 
 func (t Time) MarshalJSON() ([]byte, error) {
 	tt := time.Time(t)
-	stamp := []byte(fmt.Sprintf("%q", tt.Format(time.RFC3339)))
+	stamp := []byte(fmt.Sprintf(`"%q"`, tt.Format(time.RFC3339)))
 	return stamp, nil
 
 	/*
