@@ -2,7 +2,7 @@ package xtime
 
 import (
 	"database/sql/driver"
-	"fmt"
+	"errors"
 	"time"
 )
 
@@ -10,6 +10,12 @@ import (
 // Time
 // ================================================================
 type Time time.Time
+
+func Parse(layout, value string) (Time, error) {
+	tt, err := time.Parse(layout, value)
+
+	return Time(tt), err
+}
 
 func NowUTC() Time {
 	return Time(time.Now().UTC())
@@ -36,22 +42,15 @@ func (t Time) Add(d time.Duration) Time {
 }
 
 func (t Time) MarshalJSON() ([]byte, error) {
+	if y := time.Time(t).Year(); y < 0 || y >= 10000 {
+		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
+	}
 
-	rs := []byte(fmt.Sprintf(`"%s"`, time.Time(t).Format(time.RFC3339)))
-
-	return rs, nil
-
-	/*
-		if y := time.Time(t).Year(); y < 0 || y >= 10000 {
-			return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
-		}
-
-		b := make([]byte, 0, len(time.RFC3339)+2)
-		b = append(b, '"')
-		b = time.Time(t).AppendFormat(b, time.RFC3339)
-		b = append(b, '"')
-		return b, nil
-	*/
+	b := make([]byte, 0, len(time.RFC3339)+2)
+	b = append(b, '"')
+	b = time.Time(t).AppendFormat(b, time.RFC3339)
+	b = append(b, '"')
+	return b, nil
 }
 
 func (t *Time) UnmarshalJSON(data []byte) error {
