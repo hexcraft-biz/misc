@@ -11,12 +11,6 @@ import (
 // ================================================================
 type Time time.Time
 
-func Parse(layout, value string) (Time, error) {
-	tt, err := time.Parse(layout, value)
-
-	return Time(tt), err
-}
-
 func NowUTC() Time {
 	return Time(time.Now().UTC())
 }
