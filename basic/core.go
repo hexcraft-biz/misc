@@ -1,6 +1,7 @@
 package basic
 
 import (
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/sha512"
@@ -84,10 +85,9 @@ func GenerateSalt(size int) ([]byte, error) {
 }
 
 func HashSha512(password string, salt []byte) []byte {
-	hasher := sha512.New()
-	hasher.Write([]byte(password))
-	hasher.Write(salt)
-	return hasher.Sum(nil)
+	h := hmac.New(sha512.New, salt)
+	h.Write([]byte(password))
+	return h.Sum(nil)
 }
 
 // ================================================================
