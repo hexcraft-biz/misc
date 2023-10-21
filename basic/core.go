@@ -13,10 +13,6 @@ import (
 	"time"
 )
 
-const (
-	ByteLenSalt = 16
-)
-
 func IsSlice(v interface{}) bool {
 	return reflect.TypeOf(v).Kind() == reflect.Slice
 }
@@ -92,6 +88,14 @@ func HashSha512(password string, salt []byte) []byte {
 	hasher.Write([]byte(password))
 	hasher.Write(salt)
 	return hasher.Sum(nil)
+}
+
+func HashSaltedSha512(s string, saltSize int) ([]byte, error) {
+	if salt, err := GenerateSalt(saltSize); err != nil {
+		return nil, err
+	} else {
+		return HashSha512(s, salt), nil
+	}
 }
 
 // ================================================================
