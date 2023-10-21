@@ -84,7 +84,7 @@ func GenerateSalt(size int) ([]byte, error) {
 	return salt, nil
 }
 
-func HashSha512(password string, salt []byte) []byte {
+func GenerateSha512Hmac(password string, salt []byte) []byte {
 	h := hmac.New(sha512.New, salt)
 	h.Write([]byte(password))
 	return h.Sum(nil)
