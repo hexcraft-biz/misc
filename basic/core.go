@@ -90,14 +90,6 @@ func HashSha512(password string, salt []byte) []byte {
 	return hasher.Sum(nil)
 }
 
-func HashSaltedSha512(s string, saltSize int) ([]byte, error) {
-	if salt, err := GenerateSalt(saltSize); err != nil {
-		return nil, err
-	} else {
-		return HashSha512(s, salt), nil
-	}
-}
-
 // ================================================================
 //
 // ================================================================
