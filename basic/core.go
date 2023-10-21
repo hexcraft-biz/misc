@@ -22,13 +22,8 @@ func UrlStandardize(source string) (string, error) {
 	if u, err := url.Parse(source); err != nil {
 		return "", err
 	} else {
-
-		query := u.Query().Encode()
-		if query != "" {
-			query = "?" + query
-		}
-
-		return (u.Scheme + "://" + u.Host + u.EscapedPath() + query), nil
+		u.RawQuery = u.Query().Encode()
+		return u.String(), nil
 	}
 }
 
