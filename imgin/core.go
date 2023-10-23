@@ -2,7 +2,9 @@ package imgin
 
 import (
 	"bytes"
+	"database/sql/driver"
 	"encoding/base64"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"image"
@@ -294,4 +296,27 @@ func SquaredDist(f1, f2 face.Descriptor) float64 {
 	}
 
 	return sum
+}
+
+// ================================================================
+//
+// ================================================================
+type Descriptor face.Descriptor
+
+func (d Descriptor) Value() (driver.Value, error) {
+	buf := new(bytes.Buffer)
+	if err := binary.Write(buf, binary.LittleEndian, d); err != nil {
+		return nil, err
+	} else {
+		return buf.Bytes(), nil
+	}
+}
+
+func (d *Descriptor) Scan(src any) error {
+	if src != nil {
+		buf := bytes.NewReader(src.([]byte))
+		return binary.Read(buf, binary.LittleEndian, d)
+	}
+
+	return nil
 }
