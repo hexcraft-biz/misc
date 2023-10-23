@@ -29,13 +29,28 @@ import (
 //
 // ================================================================
 var (
-	ErrInvalidInput       = errors.New("Invalid input")         // 400
-	ErrServiceUnavailable = errors.New("Service unavailable")   // 503
-	ErrDecodeImageFailed  = errors.New("Decode image failed")   // 500
-	ErrEncodeToJpegFailed = errors.New("Encode to jpeg failed") // 500
-	ErrFileNotExists      = errors.New("File is not exists")    // 500
-	ErrReadFileFailed     = errors.New("Read file failed")      // 500
+	ErrInvalidInput        = errors.New("Invalid input")               // 400
+	ErrServiceUnavailable  = errors.New("Service unavailable")         // 503
+	ErrDecodeImageFailed   = errors.New("Decode image failed")         // 500
+	ErrEncodeToJpegFailed  = errors.New("Encode to jpeg failed")       // 500
+	ErrFileNotExists       = errors.New("File is not exists")          // 500
+	ErrReadFileFailed      = errors.New("Read file failed")            // 500
+	ErrParseMimeTypeFailed = errors.New("Mime type parse failed")      // 500
+	ErrMimeType            = errors.New("Request URL is not an image") // 400
+	ErrPayloadReading      = errors.New("Cannot read payload body")    // 500
+	ErrContent             = errors.New("Invalid Content")             // 400
 )
+
+func ErrStatusCode(err error) int {
+	switch err {
+	case ErrInvalidInput, ErrMimeType, ErrContent:
+		return http.StatusBadRequest
+	case ErrServiceUnavailable:
+		return http.StatusServiceUnavailable
+	default:
+		return http.StatusInternalServerError
+	}
+}
 
 // ================================================================
 //
@@ -145,13 +160,6 @@ var ImageMIMETypes = []string{
 	//IMAGE_SVGXML,
 	IMAGE_WEBP,
 }
-
-var (
-	ErrParseMimeTypeFailed = fmt.Errorf("Mime type parse failed")      // 500
-	ErrMimeType            = fmt.Errorf("Request URL is not an image") // 400
-	ErrPayloadReading      = fmt.Errorf("Cannot read payload body")    // 500
-	ErrContent             = fmt.Errorf("Invalid Content")             // 400
-)
 
 // ================================================================
 //
