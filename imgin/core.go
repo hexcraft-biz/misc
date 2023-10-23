@@ -47,7 +47,22 @@ type ImgInput struct {
 }
 
 func (i *ImgInput) Validate(dirUploads string) error {
-	if u, err := url.Parse(i.Src); err != nil {
+	if dirUploads != "" {
+		if _, err := os.Stat(filepath.Join(dirUploads, i.Src)); err != nil {
+			return ErrFileNotExists
+		} else if payload, err := os.ReadFile(filepath.Join(dirUploads, i.Src)); err != nil {
+			return ErrReadFileFailed
+		} else if mediaType := http.DetectContentType(payload); !slices.Contains(ImageMIMETypes, mediaType) {
+			return ErrInvalidInput
+		} else if img, err := DecodeToImage(payload, mediaType); err != nil {
+			return ErrDecodeImageFailed
+		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
+			return ErrEncodeToJpegFailed
+		} else {
+			i.Image = img
+			i.JpegBytes = jpegbytes
+		}
+	} else if u, err := url.Parse(i.Src); err != nil {
 		return ErrInvalidInput
 	} else {
 		switch {
@@ -84,20 +99,7 @@ func (i *ImgInput) Validate(dirUploads string) error {
 				i.JpegBytes = jpegbytes
 			}
 		default:
-			if _, err := os.Stat(filepath.Join(dirUploads, i.Src)); err != nil {
-				return ErrFileNotExists
-			} else if payload, err := os.ReadFile(filepath.Join(dirUploads, i.Src)); err != nil {
-				return ErrReadFileFailed
-			} else if mediaType := http.DetectContentType(payload); !slices.Contains(ImageMIMETypes, mediaType) {
-				return ErrInvalidInput
-			} else if img, err := DecodeToImage(payload, mediaType); err != nil {
-				return ErrDecodeImageFailed
-			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-				return ErrEncodeToJpegFailed
-			} else {
-				i.Image = img
-				i.JpegBytes = jpegbytes
-			}
+			return ErrInvalidInput
 		}
 	}
 
