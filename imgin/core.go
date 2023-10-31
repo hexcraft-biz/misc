@@ -58,42 +58,30 @@ func ErrStatusCode(err error) int {
 //
 // ================================================================
 type ImgInput struct {
-	Src       string      `json:"src" form:"src" binding:"required"`
-	Image     image.Image `json:"-" form:"-"`
-	JpegBytes []byte      `json:"-" form:"-"`
+	Src        string      `json:"src" form:"src" binding:"required"`
+	Image      image.Image `json:"-" form:"-"`
+	JpegBytes  []byte      `json:"-" form:"-"`
+	DirUploads string      `json:"-" form:"-"`
 }
 
-func (i *ImgInput) Validate(dirUploads string) error {
-	if u, err := url.Parse(i.Src); err != nil {
+func (i *ImgInput) Validate() error {
+	u, err := url.Parse(i.Src)
+	if err != nil {
 		return ErrInvalidInput
-	} else {
-		switch {
-		case strings.HasPrefix(u.Scheme, "http"):
-			i.Src = u.String()
-			if resp, err := http.Get(i.Src); err != nil {
-				return ErrServiceUnavailable
-			} else {
-				defer resp.Body.Close()
-				if resp.StatusCode >= 400 {
-					return ErrServiceUnavailable
-				} else if payload, mediaType, err := GetImagePayload(resp); err != nil {
-					return err
-				} else if img, err := DecodeToImage(payload, mediaType); err != nil {
-					return ErrDecodeImageFailed
-				} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-					return ErrEncodeToJpegFailed
-				} else {
-					i.Image = img
-					i.JpegBytes = jpegbytes
-				}
-			}
+	}
 
-		case strings.HasPrefix(u.Scheme, "data"):
-			if du, err := dataurl.DecodeString(i.Src); err != nil {
-				return ErrInvalidInput
-			} else if mediaType := du.MediaType.ContentType(); !slices.Contains(ImageMIMETypes, mediaType) {
-				return ErrInvalidInput
-			} else if img, err := DecodeToImage(du.Data, mediaType); err != nil {
+	switch {
+	case strings.HasPrefix(u.Scheme, "http"):
+		i.Src = u.String()
+		if resp, err := http.Get(i.Src); err != nil {
+			return ErrServiceUnavailable
+		} else {
+			defer resp.Body.Close()
+			if resp.StatusCode >= 400 {
+				return ErrServiceUnavailable
+			} else if payload, mediaType, err := GetImagePayload(resp); err != nil {
+				return err
+			} else if img, err := DecodeToImage(payload, mediaType); err != nil {
 				return ErrDecodeImageFailed
 			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
 				return ErrEncodeToJpegFailed
@@ -101,27 +89,40 @@ func (i *ImgInput) Validate(dirUploads string) error {
 				i.Image = img
 				i.JpegBytes = jpegbytes
 			}
-
-		default:
-			if dirUploads != "" {
-				if _, err := os.Stat(filepath.Join(dirUploads, i.Src)); err != nil {
-					return ErrFileNotExists
-				} else if payload, err := os.ReadFile(filepath.Join(dirUploads, i.Src)); err != nil {
-					return ErrReadFileFailed
-				} else if mediaType := http.DetectContentType(payload); !slices.Contains(ImageMIMETypes, mediaType) {
-					return ErrInvalidInput
-				} else if img, err := DecodeToImage(payload, mediaType); err != nil {
-					return ErrDecodeImageFailed
-				} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-					return ErrEncodeToJpegFailed
-				} else {
-					i.Image = img
-					i.JpegBytes = jpegbytes
-				}
-			} else {
-				return ErrInvalidInput
-			}
 		}
+
+	case strings.HasPrefix(u.Scheme, "data"):
+		if du, err := dataurl.DecodeString(i.Src); err != nil {
+			return ErrInvalidInput
+		} else if mediaType := du.MediaType.ContentType(); !slices.Contains(ImageMIMETypes, mediaType) {
+			return ErrInvalidInput
+		} else if img, err := DecodeToImage(du.Data, mediaType); err != nil {
+			return ErrDecodeImageFailed
+		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
+			return ErrEncodeToJpegFailed
+		} else {
+			i.Image = img
+			i.JpegBytes = jpegbytes
+		}
+
+	case i.DirUploads != "":
+		if _, err := os.Stat(filepath.Join(i.DirUploads, i.Src)); err != nil {
+			return ErrFileNotExists
+		} else if payload, err := os.ReadFile(filepath.Join(i.DirUploads, i.Src)); err != nil {
+			return ErrReadFileFailed
+		} else if mediaType := http.DetectContentType(payload); !slices.Contains(ImageMIMETypes, mediaType) {
+			return ErrInvalidInput
+		} else if img, err := DecodeToImage(payload, mediaType); err != nil {
+			return ErrDecodeImageFailed
+		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
+			return ErrEncodeToJpegFailed
+		} else {
+			i.Image = img
+			i.JpegBytes = jpegbytes
+		}
+
+	default:
+		return ErrInvalidInput
 	}
 
 	return nil
