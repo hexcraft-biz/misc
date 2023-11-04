@@ -1,6 +1,7 @@
 package resp
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 )
@@ -113,4 +114,12 @@ func Assert(err error) *Resp {
 	} else {
 		return nil
 	}
+}
+
+func FetchHexcApiResult(resp *http.Response, result any) *Resp {
+	defer resp.Body.Close()
+	decoder := json.NewDecoder(resp.Body)
+	payload := &Payload{Result: result}
+	err := decoder.Decode(payload)
+	return NewError(http.StatusInternalServerError, err, nil)
 }
