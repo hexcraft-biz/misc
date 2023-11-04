@@ -43,19 +43,19 @@ func New(code int, result any) *Resp {
 	}
 }
 
-// ================================================================
+// Return an *Resp with err passing in. return nil if err is nil.
 func NewError(code int, err error, result any) *Resp {
 	var resp *Resp
 
 	if err != nil {
-		resp = newError(code, err.Error(), result)
+		resp = NewErrorWithMessage(code, err.Error(), result)
 	}
 
 	return resp
 }
 
 // ================================================================
-func newError(code int, msg string, result any) *Resp {
+func NewErrorWithMessage(code int, msg string, result any) *Resp {
 	resp := &Resp{
 		StatusCode: code,
 		Payload: &Payload{
@@ -69,15 +69,15 @@ func newError(code int, msg string, result any) *Resp {
 }
 
 var (
-	ErrBadRequest          = newError(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil)
-	ErrUnauthorized        = newError(http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized), nil)
-	ErrForbidden           = newError(http.StatusForbidden, http.StatusText(http.StatusForbidden), nil)
-	ErrNotFound            = newError(http.StatusNotFound, http.StatusText(http.StatusNotFound), nil)
-	ErrConflict            = newError(http.StatusConflict, http.StatusText(http.StatusConflict), nil)
-	ErrGone                = newError(http.StatusGone, http.StatusText(http.StatusGone), nil)
-	ErrUnprocessableEntity = newError(http.StatusUnprocessableEntity, http.StatusText(http.StatusUnprocessableEntity), nil)
-	ErrServiceUnavailable  = newError(http.StatusServiceUnavailable, http.StatusText(http.StatusServiceUnavailable), nil)
-	ErrInternalServerError = newError(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), nil)
+	ErrBadRequest          = NewErrorWithMessage(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), nil)
+	ErrUnauthorized        = NewErrorWithMessage(http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized), nil)
+	ErrForbidden           = NewErrorWithMessage(http.StatusForbidden, http.StatusText(http.StatusForbidden), nil)
+	ErrNotFound            = NewErrorWithMessage(http.StatusNotFound, http.StatusText(http.StatusNotFound), nil)
+	ErrConflict            = NewErrorWithMessage(http.StatusConflict, http.StatusText(http.StatusConflict), nil)
+	ErrGone                = NewErrorWithMessage(http.StatusGone, http.StatusText(http.StatusGone), nil)
+	ErrUnprocessableEntity = NewErrorWithMessage(http.StatusUnprocessableEntity, http.StatusText(http.StatusUnprocessableEntity), nil)
+	ErrServiceUnavailable  = NewErrorWithMessage(http.StatusServiceUnavailable, http.StatusText(http.StatusServiceUnavailable), nil)
+	ErrInternalServerError = NewErrorWithMessage(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), nil)
 
 	Errs = errors.Join(
 		ErrBadRequest,
