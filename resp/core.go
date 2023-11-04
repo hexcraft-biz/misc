@@ -43,14 +43,19 @@ type Resp struct {
 
 // ================================================================
 func New(code int, result any) *Resp {
-	return &Resp{
+	r := &Resp{
 		StatusCode: code,
 		Payload: &Payload{
 			Message: http.StatusText(code),
 			Result:  result,
 		},
-		Err: nil,
 	}
+
+	if code >= 400 {
+		r.Err = &Err{text: &r.Message}
+	}
+
+	return r
 }
 
 // Return an *Resp with err passing in. return nil if err is nil.
