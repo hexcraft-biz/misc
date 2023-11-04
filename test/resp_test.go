@@ -13,6 +13,7 @@ func TestResp(t *testing.T) {
 	PrintResult(fromRespNew())
 	PrintResult(fromRespNewError())
 	PrintResult(fromRespNewErrorWithMessage())
+	PrintResult(sql.ErrNoRows)
 }
 
 type Result struct {
@@ -35,7 +36,7 @@ func fromRespNewErrorWithMessage() error {
 func PrintResult(err error) {
 	r := resp.Assert(err)
 	if r != nil {
-		fmt.Println("Code:", r.StatusCode, "Message:", r.Message, "Result:", r.Result)
+		fmt.Println("Code:", r.StatusCode, "Message:", r.Payload.Message, "Result:", r.Result)
 	} else {
 		fmt.Println("r is nil")
 	}
