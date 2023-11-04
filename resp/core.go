@@ -102,3 +102,11 @@ func (r Resp) O() (int, *Payload) {
 		return r.StatusCode, r.Payload
 	}
 }
+
+func Assert(err error) *Resp {
+	if resp, ok := err.(*Resp); ok {
+		return resp
+	} else {
+		return nil
+	}
+}

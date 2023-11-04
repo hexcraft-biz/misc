@@ -5,54 +5,25 @@ import (
 	"database/sql/driver"
 	"encoding/base64"
 	"encoding/binary"
-	"errors"
 	"fmt"
 	"image"
-	"image/gif"
+	_ "image/gif"
 	"image/jpeg"
-	"image/png"
-	"io"
-	"mime"
+	_ "image/jpeg"
+	_ "image/png"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
-	"slices"
 	"strings"
 
 	"github.com/Kagami/go-face"
-	"github.com/kettek/apng"
+	resph "github.com/hexcraft-biz/misc/resp"
+	_ "github.com/neofelisho/apng"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"github.com/vincent-petithory/dataurl"
-	"golang.org/x/image/webp"
+	_ "golang.org/x/image/webp"
 )
-
-// ================================================================
-//
-// ================================================================
-var (
-	ErrInvalidInput        = errors.New("Invalid input")               // 400
-	ErrServiceUnavailable  = errors.New("Service unavailable")         // 503
-	ErrDecodeImageFailed   = errors.New("Decode image failed")         // 500
-	ErrEncodeToJpegFailed  = errors.New("Encode to jpeg failed")       // 500
-	ErrFileNotExists       = errors.New("File is not exists")          // 500
-	ErrReadFileFailed      = errors.New("Read file failed")            // 500
-	ErrParseMimeTypeFailed = errors.New("Mime type parse failed")      // 500
-	ErrMimeType            = errors.New("Request URL is not an image") // 400
-	ErrPayloadReading      = errors.New("Cannot read payload body")    // 500
-	ErrContent             = errors.New("Invalid Content")             // 400
-)
-
-func ErrStatusCode(err error) int {
-	switch err {
-	case ErrInvalidInput, ErrMimeType, ErrContent:
-		return http.StatusBadRequest
-	case ErrServiceUnavailable:
-		return http.StatusServiceUnavailable
-	default:
-		return http.StatusInternalServerError
-	}
-}
 
 // ================================================================
 //
@@ -64,27 +35,24 @@ type ImgInput struct {
 	DirUploads string      `json:"-" form:"-"`
 }
 
-func (i *ImgInput) Validate() error {
+func (i *ImgInput) Validate() *resph.Resp {
 	u, err := url.Parse(i.Src)
 	if err != nil {
-		return ErrInvalidInput
+		return resph.ErrBadRequest
 	}
 
 	switch {
 	case strings.HasPrefix(u.Scheme, "http"):
 		i.Src = u.String()
 		if resp, err := http.Get(i.Src); err != nil {
-			return ErrServiceUnavailable
+			return resph.NewError(http.StatusServiceUnavailable, err, nil)
 		} else {
-			defer resp.Body.Close()
 			if resp.StatusCode >= 400 {
-				return ErrServiceUnavailable
-			} else if payload, mediaType, err := GetImagePayload(resp); err != nil {
+				return resph.ErrBadRequest
+			} else if img, err := DecodeImageFromResponse(resp); err != nil {
 				return err
-			} else if img, err := DecodeToImage(payload, mediaType); err != nil {
-				return ErrDecodeImageFailed
 			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-				return ErrEncodeToJpegFailed
+				return err
 			} else {
 				i.Image = img
 				i.JpegBytes = jpegbytes
@@ -93,36 +61,33 @@ func (i *ImgInput) Validate() error {
 
 	case strings.HasPrefix(u.Scheme, "data"):
 		if du, err := dataurl.DecodeString(i.Src); err != nil {
-			return ErrInvalidInput
-		} else if mediaType := du.MediaType.ContentType(); !slices.Contains(ImageMIMETypes, mediaType) {
-			return ErrInvalidInput
-		} else if img, err := DecodeToImage(du.Data, mediaType); err != nil {
-			return ErrDecodeImageFailed
+			return resph.ErrBadRequest
+		} else if img, _, err := image.Decode(bytes.NewReader(du.Data)); err != nil {
+			return resph.NewError(http.StatusInternalServerError, err, nil)
 		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-			return ErrEncodeToJpegFailed
+			return err
 		} else {
 			i.Image = img
 			i.JpegBytes = jpegbytes
 		}
 
 	case i.DirUploads != "":
-		if _, err := os.Stat(filepath.Join(i.DirUploads, i.Src)); err != nil {
-			return ErrFileNotExists
-		} else if payload, err := os.ReadFile(filepath.Join(i.DirUploads, i.Src)); err != nil {
-			return ErrReadFileFailed
-		} else if mediaType := http.DetectContentType(payload); !slices.Contains(ImageMIMETypes, mediaType) {
-			return ErrInvalidInput
-		} else if img, err := DecodeToImage(payload, mediaType); err != nil {
-			return ErrDecodeImageFailed
-		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-			return ErrEncodeToJpegFailed
+		if file, err := os.Open(filepath.Join(i.DirUploads, i.Src)); err != nil {
+			return resph.NewError(http.StatusInternalServerError, err, nil)
 		} else {
-			i.Image = img
-			i.JpegBytes = jpegbytes
+			defer file.Close()
+			if img, _, err := image.Decode(file); err != nil {
+				return resph.NewError(http.StatusInternalServerError, err, nil)
+			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
+				return err
+			} else {
+				i.Image = img
+				i.JpegBytes = jpegbytes
+			}
 		}
 
 	default:
-		return ErrInvalidInput
+		return resph.ErrBadRequest
 	}
 
 	return nil
@@ -171,80 +136,22 @@ var ImageMIMETypes = []string{
 // ================================================================
 //
 // ================================================================
-func GetImagePayload(resp *http.Response) ([]byte, string, error) {
-	if mediaType, _, err := mime.ParseMediaType(resp.Header.Get("Content-Type")); err != nil {
-		return nil, "", ErrParseMimeTypeFailed
-	} else if !slices.Contains(ImageMIMETypes, mediaType) {
-		return nil, "", ErrMimeType
-	} else if payload, err := io.ReadAll(resp.Body); err != nil {
-		return nil, "", ErrPayloadReading
-	} else if mediaType := http.DetectContentType(payload); !slices.Contains(ImageMIMETypes, mediaType) {
-		return nil, "", ErrContent
-	} else {
-		return payload, mediaType, nil
+func DecodeImageFromResponse(resp *http.Response) (image.Image, *resph.Resp) {
+	defer resp.Body.Close()
+	img, _, err := image.Decode(resp.Body)
+	if err != nil {
+		return nil, resph.NewError(http.StatusInternalServerError, err, nil)
 	}
+	return img, nil
 }
 
 // ================================================================
 //
 // ================================================================
-func DecodeToImage(payload []byte, mediaType string) (image.Image, error) {
-	switch mediaType {
-	case IMAGE_APNG:
-		if img, err := apng.Decode(bytes.NewReader(payload)); err != nil {
-			return nil, fmt.Errorf("Unable to decode: apng.")
-		} else {
-			return img, nil
-		}
-
-	case IMAGE_AVIF:
-		return nil, fmt.Errorf("Unable to decode: avif.")
-
-	case IMAGE_GIF:
-		if img, err := gif.Decode(bytes.NewReader(payload)); err != nil {
-			return nil, fmt.Errorf("Unable to decode: gif.")
-		} else {
-			return img, nil
-		}
-
-	case IMAGE_JPEG:
-		if img, err := jpeg.Decode(bytes.NewReader(payload)); err != nil {
-			return nil, fmt.Errorf("Unable to decode: jepg.")
-		} else {
-			return img, nil
-		}
-
-	case IMAGE_PNG:
-		if img, err := png.Decode(bytes.NewReader(payload)); err != nil {
-			return nil, fmt.Errorf("Unable to decode: png.")
-		} else {
-			return img, nil
-		}
-
-	case IMAGE_SVGXML:
-		return nil, fmt.Errorf("Unable to decode: svg+xml.")
-
-	case IMAGE_WEBP:
-		if img, err := webp.Decode(bytes.NewReader(payload)); err != nil {
-			return nil, fmt.Errorf("Unable to decode: webp.")
-		} else {
-			return img, nil
-		}
-	}
-
-	return nil, fmt.Errorf("Invalid image.")
-}
-
-// ================================================================
-//
-// ================================================================
-func EncodeToJpeg(img image.Image) ([]byte, error) {
+func EncodeToJpeg(img image.Image) ([]byte, *resph.Resp) {
 	buf := new(bytes.Buffer)
-	if err := jpeg.Encode(buf, img, nil); err != nil {
-		return nil, fmt.Errorf("Unable to encode: jpeg.")
-	}
-
-	return buf.Bytes(), nil
+	err := jpeg.Encode(buf, img, nil)
+	return buf.Bytes(), resph.NewError(http.StatusInternalServerError, err, nil)
 }
 
 // ================================================================
@@ -257,7 +164,7 @@ func JpegToDataUrl(payload []byte) string {
 // ================================================================
 //
 // ================================================================
-func CropImage(img image.Image, crop image.Rectangle) (image.Image, error) {
+func CropImage(img image.Image, crop image.Rectangle) (image.Image, *resph.Resp) {
 	type subImager interface {
 		SubImage(r image.Rectangle) image.Image
 	}
@@ -267,7 +174,7 @@ func CropImage(img image.Image, crop image.Rectangle) (image.Image, error) {
 	// image.
 	simg, ok := img.(subImager)
 	if !ok {
-		return nil, fmt.Errorf("image does not support cropping")
+		return nil, resph.NewErrorWithMessage(http.StatusInternalServerError, "Image cropping failed", nil)
 	}
 
 	return simg.SubImage(crop), nil
