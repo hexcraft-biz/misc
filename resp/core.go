@@ -11,7 +11,7 @@ type Err struct {
 
 func (e Err) Error() string {
 	if e.text != nil {
-		return *e.Text
+		return *e.text
 	} else {
 		return ""
 	}
@@ -68,7 +68,7 @@ func NewErrorWithMessage(code int, msg string, result any) *Resp {
 		},
 	}
 
-	resp.Err = &Err{Message: &resp.Payload.Message}
+	resp.Err = &Err{text: &resp.Payload.Message}
 	return resp
 }
 
