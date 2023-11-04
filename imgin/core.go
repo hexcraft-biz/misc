@@ -28,14 +28,14 @@ import (
 // ================================================================
 //
 // ================================================================
-type ImgInput struct {
+type Imgin struct {
 	Src        string      `json:"src" form:"src" binding:"required"`
 	Image      image.Image `json:"-" form:"-"`
 	JpegBytes  []byte      `json:"-" form:"-"`
 	DirUploads string      `json:"-" form:"-"`
 }
 
-func (i *ImgInput) Validate() *resph.Resp {
+func (i *Imgin) Validate() *resph.Resp {
 	u, err := url.Parse(i.Src)
 	if err != nil {
 		return resph.ErrBadRequest
