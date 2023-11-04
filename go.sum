@@ -2,6 +2,8 @@ github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e h1:lqIUFzxaqyYqUn4M
 github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e/go.mod h1:9wdDJkRgo3SGTcFwbQ7elVIQhIr2bbBjecuY7VoqmPU=
 github.com/aws/aws-sdk-go v1.38.20 h1:QbzNx/tdfATbdKfubBpkt84OM6oBkxQZRw6+bW2GyeA=
 github.com/aws/aws-sdk-go v1.38.20/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
+github.com/aws/aws-sdk-go v1.47.3 h1:e0H6NFXiniCpR8Lu3lTphVdRaeRCDLAeRyTHd1tJSd8=
+github.com/aws/aws-sdk-go v1.47.3/go.mod h1:LF8svs817+Nz+DmiMQKTO3ubZ/6IaTpq3TjupRn3Eqk=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/disintegration/imaging v1.6.2/go.mod h1:44/5580QXChDfwIclfc/PCwrr44amcmDAg8hxG0Ewe4=
@@ -19,6 +21,8 @@ github.com/hexcraft-biz/misc/imgin v0.0.0-20231104092959-aca87f19006d h1:cuuv50J
 github.com/hexcraft-biz/misc/imgin v0.0.0-20231104092959-aca87f19006d/go.mod h1:mCeNJNmYMkuoDpg2jiQDyOnIUllUZq9ebeppc7eZun4=
 github.com/hexcraft-biz/misc/resp v0.0.0-20231104051147-700af52bb742 h1:kQQZ4iTZyxmJ4pzm5/pXoXi409BGDyM6BjI9PgenMXs=
 github.com/hexcraft-biz/misc/resp v0.0.0-20231104051147-700af52bb742/go.mod h1:TSzqNq3VhmjuKH8vVO0RH+YPyS0pjYZFX9xTYU6tPBs=
+github.com/hexcraft-biz/misc/resp v0.0.0-20231104092959-aca87f19006d h1:j5LXEHf97OOUse0G52DBPFfG/xVl0fN+3Co1j9HhwI0=
+github.com/hexcraft-biz/misc/resp v0.0.0-20231104092959-aca87f19006d/go.mod h1:TSzqNq3VhmjuKH8vVO0RH+YPyS0pjYZFX9xTYU6tPBs=
 github.com/hexcraft-biz/misc/scope v0.0.0-20231104051147-700af52bb742 h1:os4YS8pM7YWQAOcqxTjLspn4Vnf+vuH8dDL1e98UNxU=
 github.com/hexcraft-biz/misc/scope v0.0.0-20231104051147-700af52bb742/go.mod h1:PrfsV9QGPrVqN+6dt8KSVO0jm0QruiG3/h5gGwrL3dc=
 github.com/hexcraft-biz/misc/xtime v0.0.0-20231104054403-3e985449f927 h1:WXkEHRB4R4sNptImyFyN0c6SeDJH6YkNaFlR56pf1LI=

@@ -3,7 +3,7 @@ module github.com/hexcraft-biz/misc
 go 1.21.1
 
 require (
-	github.com/hexcraft-biz/misc/resp v0.0.0-20231104051147-700af52bb742
+	github.com/hexcraft-biz/misc/resp v0.0.0-20231104092959-aca87f19006d
 	github.com/hexcraft-biz/misc/scope v0.0.0-20231104051147-700af52bb742
 	github.com/hexcraft-biz/misc/xtime v0.0.0-20231104054403-3e985449f927
 	github.com/hexcraft-biz/misc/xuuid v0.0.0-20231104054403-3e985449f927
@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e // indirect
-	github.com/aws/aws-sdk-go v1.38.20 // indirect
+	github.com/aws/aws-sdk-go v1.47.3 // indirect
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/hexcraft-biz/misc/basic v0.0.0-20231104024802-d6bd03c46e7a // indirect
 	github.com/hexcraft-biz/misc/imgin v0.0.0-20231104092959-aca87f19006d // indirect
