@@ -8,7 +8,7 @@ import (
 )
 
 type input struct {
-	imgin.Imgin
+	*imgin.Imgin
 }
 
 func TestImgin(t *testing.T) {
