@@ -6,11 +6,15 @@ import (
 )
 
 type Err struct {
-	Message *string
+	text *string
 }
 
 func (e Err) Error() string {
-	return *e.Message
+	if e.text != nil {
+		return *e.Text
+	} else {
+		return ""
+	}
 }
 
 func (e Err) Is(target error) bool {
