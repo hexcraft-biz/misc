@@ -3,8 +3,8 @@ module github.com/hexcraft-biz/misc
 go 1.21.1
 
 require (
-	github.com/hexcraft-biz/misc/imgin v0.0.0-20231104092959-aca87f19006d
-	github.com/hexcraft-biz/misc/resp v0.0.0-20231104092959-aca87f19006d
+	github.com/hexcraft-biz/misc/imgin v0.0.0-20231104123604-5b0a2e1c2f2a
+	github.com/hexcraft-biz/misc/resp v0.0.0-20231104123604-5b0a2e1c2f2a
 	github.com/hexcraft-biz/misc/scope v0.0.0-20231104123604-5b0a2e1c2f2a
 	github.com/hexcraft-biz/misc/xtime v0.0.0-20231104092959-aca87f19006d
 	github.com/hexcraft-biz/misc/xuuid v0.0.0-20231104092959-aca87f19006d

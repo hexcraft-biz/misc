@@ -50,9 +50,9 @@ func (i *Imgin) Validate() *resph.Resp {
 			if resp.StatusCode >= 400 {
 				return resph.ErrBadRequest
 			} else if img, err := DecodeImageFromResponse(resp); err != nil {
-				return err
+				return resph.NewError(http.StatusBadRequest, err, nil)
 			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-				return err
+				return resph.NewError(http.StatusInternalServerError, err, nil)
 			} else {
 				i.Image = img
 				i.JpegBytes = jpegbytes
@@ -61,11 +61,11 @@ func (i *Imgin) Validate() *resph.Resp {
 
 	case strings.HasPrefix(u.Scheme, "data"):
 		if du, err := dataurl.DecodeString(i.Src); err != nil {
-			return resph.ErrBadRequest
+			return resph.NewError(http.StatusBadRequest, err, nil)
 		} else if img, _, err := image.Decode(bytes.NewReader(du.Data)); err != nil {
 			return resph.NewError(http.StatusInternalServerError, err, nil)
 		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-			return err
+			return resph.NewError(http.StatusInternalServerError, err, nil)
 		} else {
 			i.Image = img
 			i.JpegBytes = jpegbytes
@@ -79,7 +79,7 @@ func (i *Imgin) Validate() *resph.Resp {
 			if img, _, err := image.Decode(file); err != nil {
 				return resph.NewError(http.StatusInternalServerError, err, nil)
 			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-				return err
+				return resph.NewError(http.StatusInternalServerError, err, nil)
 			} else {
 				i.Image = img
 				i.JpegBytes = jpegbytes
@@ -136,22 +136,19 @@ var ImageMIMETypes = []string{
 // ================================================================
 //
 // ================================================================
-func DecodeImageFromResponse(resp *http.Response) (image.Image, *resph.Resp) {
+func DecodeImageFromResponse(resp *http.Response) (image.Image, error) {
 	defer resp.Body.Close()
 	img, _, err := image.Decode(resp.Body)
-	if err != nil {
-		return nil, resph.NewError(http.StatusInternalServerError, err, nil)
-	}
-	return img, nil
+	return img, err
 }
 
 // ================================================================
 //
 // ================================================================
-func EncodeToJpeg(img image.Image) ([]byte, *resph.Resp) {
+func EncodeToJpeg(img image.Image) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	err := jpeg.Encode(buf, img, nil)
-	return buf.Bytes(), resph.NewError(http.StatusInternalServerError, err, nil)
+	return buf.Bytes(), err
 }
 
 // ================================================================
