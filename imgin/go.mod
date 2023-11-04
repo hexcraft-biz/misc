@@ -1,10 +1,9 @@
-module github.com/hexcraft-biz/misc
+module github.com/hexcraft-biz/misc/imgin
 
 go 1.21.1
 
 require (
 	github.com/Kagami/go-face v0.0.0-20210630145111-0c14797b4d0e
-	github.com/google/uuid v1.3.1
 	github.com/kettek/apng v0.0.0-20220823221153-ff692776a607
 	github.com/u2takey/ffmpeg-go v0.5.0
 	github.com/vincent-petithory/dataurl v1.0.0
