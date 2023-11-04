@@ -13,9 +13,8 @@ type Err struct {
 func (e Err) Error() string {
 	if e.text != nil {
 		return *e.text
-	} else {
-		return ""
 	}
+	return ""
 }
 
 func (e Err) Is(target error) bool {
@@ -28,6 +27,12 @@ func (e Err) Is(target error) bool {
 type Payload struct {
 	Message string `json:"message"`
 	Result  any    `json:"result,omitempty"`
+}
+
+func NewPayload(result any) *Payload {
+	return &Payload{
+		Result: result,
+	}
 }
 
 type Resp struct {
@@ -116,10 +121,16 @@ func Assert(err error) *Resp {
 	}
 }
 
-func FetchHexcApiResult(resp *http.Response, result any) *Resp {
+func FetchHexcApiResult(resp *http.Response, payload *Payload) *Resp {
 	defer resp.Body.Close()
 	decoder := json.NewDecoder(resp.Body)
-	payload := &Payload{Result: result}
-	err := decoder.Decode(payload)
-	return NewError(http.StatusInternalServerError, err, nil)
+	if err := decoder.Decode(payload); err != nil {
+		return NewError(http.StatusInternalServerError, err, nil)
+	}
+
+	if resp.StatusCode >= 500 {
+		return NewErrorWithMessage(http.StatusServiceUnavailable, payload.Message, nil)
+	}
+
+	return nil
 }
