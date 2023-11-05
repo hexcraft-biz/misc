@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/Kagami/go-face"
-	resph "github.com/hexcraft-biz/misc/resp"
+	"github.com/hexcraft-biz/her"
 	_ "github.com/neofelisho/apng"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"github.com/vincent-petithory/dataurl"
@@ -35,24 +35,24 @@ type Imgin struct {
 	DirUploads string      `json:"-" form:"-"`
 }
 
-func (i *Imgin) Validate() *resph.Resp {
+func (i *Imgin) Validate() *her.Error {
 	u, err := url.Parse(i.Src)
 	if err != nil {
-		return resph.ErrBadRequest
+		return her.ErrBadRequest
 	}
 
 	switch {
 	case strings.HasPrefix(u.Scheme, "http"):
 		i.Src = u.String()
 		if resp, err := http.Get(i.Src); err != nil {
-			return resph.NewError(http.StatusServiceUnavailable, err, nil)
+			return her.NewError(http.StatusServiceUnavailable, err, nil)
 		} else {
 			if resp.StatusCode >= 400 {
-				return resph.ErrBadRequest
+				return her.ErrBadRequest
 			} else if img, err := DecodeImageFromResponse(resp); err != nil {
-				return resph.NewError(http.StatusBadRequest, err, nil)
+				return her.NewError(http.StatusBadRequest, err, nil)
 			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-				return resph.NewError(http.StatusInternalServerError, err, nil)
+				return her.NewError(http.StatusInternalServerError, err, nil)
 			} else {
 				i.Image = img
 				i.JpegBytes = jpegbytes
@@ -61,11 +61,11 @@ func (i *Imgin) Validate() *resph.Resp {
 
 	case strings.HasPrefix(u.Scheme, "data"):
 		if du, err := dataurl.DecodeString(i.Src); err != nil {
-			return resph.NewError(http.StatusBadRequest, err, nil)
+			return her.NewError(http.StatusBadRequest, err, nil)
 		} else if img, _, err := image.Decode(bytes.NewReader(du.Data)); err != nil {
-			return resph.NewError(http.StatusInternalServerError, err, nil)
+			return her.NewError(http.StatusInternalServerError, err, nil)
 		} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-			return resph.NewError(http.StatusInternalServerError, err, nil)
+			return her.NewError(http.StatusInternalServerError, err, nil)
 		} else {
 			i.Image = img
 			i.JpegBytes = jpegbytes
@@ -73,13 +73,13 @@ func (i *Imgin) Validate() *resph.Resp {
 
 	case i.DirUploads != "":
 		if file, err := os.Open(filepath.Join(i.DirUploads, i.Src)); err != nil {
-			return resph.NewError(http.StatusInternalServerError, err, nil)
+			return her.NewError(http.StatusInternalServerError, err, nil)
 		} else {
 			defer file.Close()
 			if img, _, err := image.Decode(file); err != nil {
-				return resph.NewError(http.StatusInternalServerError, err, nil)
+				return her.NewError(http.StatusInternalServerError, err, nil)
 			} else if jpegbytes, err := EncodeToJpeg(img); err != nil {
-				return resph.NewError(http.StatusInternalServerError, err, nil)
+				return her.NewError(http.StatusInternalServerError, err, nil)
 			} else {
 				i.Image = img
 				i.JpegBytes = jpegbytes
@@ -87,7 +87,7 @@ func (i *Imgin) Validate() *resph.Resp {
 		}
 
 	default:
-		return resph.ErrBadRequest
+		return her.ErrBadRequest
 	}
 
 	return nil
@@ -161,7 +161,7 @@ func JpegToDataUrl(payload []byte) string {
 // ================================================================
 //
 // ================================================================
-func CropImage(img image.Image, crop image.Rectangle) (image.Image, *resph.Resp) {
+func CropImage(img image.Image, crop image.Rectangle) (image.Image, *her.Error) {
 	type subImager interface {
 		SubImage(r image.Rectangle) image.Image
 	}
@@ -171,7 +171,7 @@ func CropImage(img image.Image, crop image.Rectangle) (image.Image, *resph.Resp)
 	// image.
 	simg, ok := img.(subImager)
 	if !ok {
-		return nil, resph.NewErrorWithMessage(http.StatusInternalServerError, "Image cropping failed", nil)
+		return nil, her.NewErrorWithMessage(http.StatusInternalServerError, "Image cropping failed", nil)
 	}
 
 	return simg.SubImage(crop), nil
