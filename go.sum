@@ -15,6 +15,8 @@ github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/google/uuid v1.4.0 h1:MtMxsa51/r9yyhkyLsVeVt0B+BGQZzpQiTQ4eHZ8bc4=
 github.com/google/uuid v1.4.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/hashicorp/golang-lru v0.5.4/go.mod h1:iADmTwqILo4mZ8BN3D2Q6+9jd8WM5uGBxy+E8yxSoD4=
+github.com/hexcraft-biz/her v0.0.3 h1:pP25+gVPGx9Vds6mesSovf7Ubfh5Sny2DRjRwEsmG4s=
+github.com/hexcraft-biz/her v0.0.3/go.mod h1:g7jcBefsWaWBmhFzfeO0m8GsnrJQOEkFHS/SeiMTM+Y=
 github.com/hexcraft-biz/misc/basic v0.0.0-20231104233355-a4e83e481e2b h1:23RA42fJnhw/2VxPpvvrVkj6Qx6anbc9M6evRoIr+pI=
 github.com/hexcraft-biz/misc/basic v0.0.0-20231104233355-a4e83e481e2b/go.mod h1:kB2wbubTMfw/gRlZ3G06HgO6eSqTFie+tHwGLSUZ5XU=
 github.com/hexcraft-biz/misc/imgin v0.0.0-20231104233355-a4e83e481e2b h1:Rzv0T58worUtExPcte5EG9GftNObM0yCnNufXJHSbOo=
