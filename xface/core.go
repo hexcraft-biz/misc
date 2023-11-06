@@ -46,10 +46,10 @@ func (d *Descriptor) Scan(src any) error {
 	return nil
 }
 
-func (d Descriptor) DistWithFace(f Descriptor) float64 {
+func (d Descriptor) DistWithFace(f *Descriptor) float64 {
 	sum, diff := float64(0), float64(0)
 	for i := 0; i < DimensionCount; i += 1 {
-		diff = float64(d[i] - f[i])
+		diff = float64(d[i] - (*f)[i])
 		sum += diff * diff
 	}
 
