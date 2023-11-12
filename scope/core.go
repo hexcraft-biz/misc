@@ -53,3 +53,13 @@ func (s Scopes) Contains(sub Scopes) bool {
 	}
 	return true
 }
+
+func (s Scopes) Slice() []string {
+	ss := []string{}
+	for scope, has := range s {
+		if has {
+			ss = append(ss, scope)
+		}
+	}
+	return ss
+}
