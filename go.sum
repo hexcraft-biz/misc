@@ -1,10 +1,8 @@
 github.com/google/uuid v1.4.0 h1:MtMxsa51/r9yyhkyLsVeVt0B+BGQZzpQiTQ4eHZ8bc4=
 github.com/google/uuid v1.4.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
-github.com/hexcraft-biz/misc/basic v0.0.0-20231105074535-e74892110375 h1:+rB23D7J2iS5SXmhRlsBh13Vu0kvRDfmURIW+9I3MPE=
-github.com/hexcraft-biz/misc/basic v0.0.0-20231105074535-e74892110375/go.mod h1:kB2wbubTMfw/gRlZ3G06HgO6eSqTFie+tHwGLSUZ5XU=
-github.com/hexcraft-biz/misc/scope v0.0.0-20231106073722-7f6c6a512fa1 h1:YNz8ZIyyVVf/GZzLOqxUSacfghYohJdG9hlaB89/jm0=
-github.com/hexcraft-biz/misc/scope v0.0.0-20231106073722-7f6c6a512fa1/go.mod h1:PrfsV9QGPrVqN+6dt8KSVO0jm0QruiG3/h5gGwrL3dc=
-github.com/hexcraft-biz/misc/xtime v0.0.0-20231106073722-7f6c6a512fa1 h1:Pos7m0WzalogqOeAdb8020VAQWtso0XxQzMzE9uS9sU=
-github.com/hexcraft-biz/misc/xtime v0.0.0-20231106073722-7f6c6a512fa1/go.mod h1:LDVrHyp0q1hbZNdLp31lP13REs0CyHc4MHq3jr67NxY=
-github.com/hexcraft-biz/misc/xuuid v0.0.0-20231106072839-979743fef59e h1:8vaI1eXpqUgvictRTwttVzI3fSKyRsT5QOmcP9Mo7lM=
-github.com/hexcraft-biz/misc/xuuid v0.0.0-20231106072839-979743fef59e/go.mod h1:KvaYDSfdHt7C9/5VRNQNzEHzWJgPmR97iW6Igs/1e4c=
+github.com/hexcraft-biz/misc/basic v0.0.0-20231112091837-54fde68c687d h1:JD30iPYMv6kiZJHI+7RFmEQoo4gSvuqDPH8KE24/wYU=
+github.com/hexcraft-biz/misc/basic v0.0.0-20231112091837-54fde68c687d/go.mod h1:kB2wbubTMfw/gRlZ3G06HgO6eSqTFie+tHwGLSUZ5XU=
+github.com/hexcraft-biz/misc/xtime v0.0.0-20231106075117-5ac0dd600be9 h1:gIFEnYWKjdJPHxETI5eFkUeTkTOZ8bQiUN09B7Vy47Q=
+github.com/hexcraft-biz/misc/xtime v0.0.0-20231106075117-5ac0dd600be9/go.mod h1:LDVrHyp0q1hbZNdLp31lP13REs0CyHc4MHq3jr67NxY=
+github.com/hexcraft-biz/misc/xuuid v0.0.0-20231112091837-54fde68c687d h1:5LYJUyzO5Wv/qrW0a+r04xiBIN0pIjuNaIt+JVrz46o=
+github.com/hexcraft-biz/misc/xuuid v0.0.0-20231112091837-54fde68c687d/go.mod h1:KvaYDSfdHt7C9/5VRNQNzEHzWJgPmR97iW6Igs/1e4c=
