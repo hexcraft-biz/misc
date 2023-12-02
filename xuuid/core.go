@@ -163,3 +163,6 @@ func (w Wildcard) Value() (driver.Value, error) {
 		return UUID(u).Value()
 	}
 }
+
+// ================================================================
+var Nil UUID
