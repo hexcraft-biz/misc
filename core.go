@@ -7,11 +7,15 @@ import (
 	"crypto/sha512"
 	"fmt"
 	"io"
+	"math/big"
 	mrand "math/rand"
 	"net/url"
 	"os"
 	"reflect"
+	"strings"
 	"time"
+
+	"github.com/hexcraft-biz/xuuid"
 )
 
 func IsSlice(v interface{}) bool {
@@ -86,8 +90,6 @@ func GenerateSha512Hmac(password string, salt []byte) []byte {
 }
 
 // ================================================================
-//
-// ================================================================
 func CompareChecksum(chksum string, fp string) (bool, error) {
 	if databytes, err := os.ReadFile(fp); err != nil {
 		return false, err
@@ -96,4 +98,32 @@ func CompareChecksum(chksum string, fp string) (bool, error) {
 	} else {
 		return false, nil
 	}
+}
+
+// ----------------------------------------------------------------
+const base62Chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+func base62Encode(num *big.Int) string {
+	if num.Sign() == 0 {
+		return "0"
+	}
+
+	var encoded string
+	base := big.NewInt(62)
+	zero := big.NewInt(0)
+
+	for num.Cmp(zero) > 0 {
+		mod := new(big.Int)
+		num.DivMod(num, base, mod)
+		encoded = string(base62Chars[mod.Int64()]) + encoded
+	}
+
+	return encoded
+}
+
+func uuidToBase62(id xuuid.UUID) string {
+	noDashUuidStr := strings.ReplaceAll(id.String(), "-", "")
+	num := new(big.Int)
+	num.SetString(noDashUuidStr, 16)
+	return base62Encode(num)
 }

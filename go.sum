@@ -1,0 +1,4 @@
+github.com/google/uuid v1.5.0 h1:1p67kYwdtXjb0gL0BPiP1Av9wiZPo5A8z2cWkTZ+eyU=
+github.com/google/uuid v1.5.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/hexcraft-biz/xuuid v0.0.7 h1:oO438lYJap/O61ACvsjcHCrBUPate2mQ3KcPSmOMEDA=
+github.com/hexcraft-biz/xuuid v0.0.7/go.mod h1:s48h62DSE8XY14OfDdD+U03B2UYDXHF+tkMxcLQhpvI=
